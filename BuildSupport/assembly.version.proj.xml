@@ -35,9 +35,9 @@
    />
  
    <Target Name="SetAssemblyVersion">
-      <Exec Command="git rev-parse --short --verify  HEAD" ConsoleToMSBuild="true">
+      <!-- <Exec Command="git rev-parse -/-short -/-verify  HEAD" ConsoleToMSBuild="true">
          <Output TaskParameter="ConsoleOutput" PropertyName="CommitHash" />
-      </Exec>
+      </Exec> -->
 
 
       <PropertyGroup>

@@ -26,7 +26,7 @@ namespace Mock4Net.Core
         private FluentMockServer(int port, bool ssl)
         {
             string protocol = ssl ? "https" : "http";
-            _httpServer = new TinyHttpServer(protocol + "://localhost:" + port + "/", HandleRequest);
+            _httpServer = new TinyHttpServer(protocol + "://waf.fakery.test.xero.com:" + port + "/", HandleRequest);
             _port = port;
             _httpServer.Start();
         }
