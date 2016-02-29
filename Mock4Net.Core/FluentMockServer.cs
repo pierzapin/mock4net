@@ -22,6 +22,7 @@ namespace Mock4Net.Core
         private readonly int _port;
         private TimeSpan _requestProcessingDelay = TimeSpan.Zero;
         private object _syncRoot = new object();
+        private const string _correlationTokenName = "CorrelationToken";
 
         private FluentMockServer(int port, bool ssl)
         {
@@ -102,6 +103,7 @@ namespace Mock4Net.Core
             var targetRoute = _routes.FirstOrDefault(route => route.IsRequestHandled(request));
             if (targetRoute == null)
             {
+                
                 ctx.Response.StatusCode = 404;
                 var content = Encoding.UTF8.GetBytes("<html><body>Mock Server: page not found</body></html>");
                 ctx.Response.OutputStream.Write(content, 0, content.Length);
@@ -109,7 +111,11 @@ namespace Mock4Net.Core
             else
             {
                 var response = await targetRoute.ResponseTo(request);
-
+                if (!response.Headers.ContainsKey(_correlationTokenName))
+                {
+                    response.AddHeader(_correlationTokenName, String.Empty);
+                }
+                response.Headers[_correlationTokenName] = request.GetParameter(_correlationTokenName).FirstOrDefault();
                 _responseMapper.Map(response, ctx.Response);
             }
             ctx.Response.Close();
